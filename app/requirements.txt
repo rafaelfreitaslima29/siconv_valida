@@ -1,0 +1,15 @@
+python-dotenv==1.1.0
+Flask==3.1.0
+psycopg-binary==3.2.1
+psycopg==3.2.1
+# SQLAlchemy==2.0.31
+SQLAlchemy==2.0.42
+pandas==2.2.2
+# openpyxl==3.1.5
+# xlrd==2.0.1
+requests==2.32.3
+ollama==0.4.7
+langchain==0.3.23
+langchain-ollama==0.3.1
+langchain-community==0.3.21
+openai==1.95.1
