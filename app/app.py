@@ -134,7 +134,9 @@ def run_debug():
     ds = DebugService()
     # ds.RunFileDownloader()
    
-    ds.RunZipManager()
+    # ds.RunZipManager()
+
+    ds.RunPromptCreateTableCsv()
 
     print("Terminou a execução!!")
 

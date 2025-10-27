@@ -1,6 +1,7 @@
 from llm.llm_manager import LLMManager
 from utils.file_downloader import FileDownloader
 from utils.zip_manager import ZipManager
+from llm.prompt.prompt_create_table_by_csv import PromptCreateTableCsv
 
 
 
@@ -33,6 +34,18 @@ class DebugService():
         zm = ZipManager()
         zm.run_extract(zip_path=zip_path, extract_to=extract_to)
 
+
+    # ================================================================================================
+    # Executa PromptCreateTableCsv
+    # ================================================================================================
+    def RunPromptCreateTableCsv(self):
+        pctb = PromptCreateTableCsv()
+
+        pctb.set_caminho_e_nome_csv(caminho_e_nome_csv="files/descompactados/siconv_convenio.csv")
+        pctb.set_nome_tabela_banco(nome_tabela_banco="tb_convenios")
+
+        prompt = pctb.run_montar_prompt()
+        print(prompt)
 
 
 
