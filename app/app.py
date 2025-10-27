@@ -142,7 +142,9 @@ def run_debug():
 
     # ds.RunPromptVerificarAlteracaoNomesColunas()
 
-    ds.RunPromptVerificarAdicaoColunas()
+    # ds.RunPromptVerificarAdicaoColunas()
+
+    ds.RunPromptAjustesTable()
 
     print("Terminou a execução!!")
 
