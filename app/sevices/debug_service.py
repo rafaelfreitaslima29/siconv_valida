@@ -2,6 +2,7 @@ from llm.llm_manager import LLMManager
 from utils.file_downloader import FileDownloader
 from utils.zip_manager import ZipManager
 from llm.prompt.prompt_create_table_by_csv import PromptCreateTableCsv
+from llm.create_table_by_csv import CreateTableByCSV
 
 
 
@@ -46,6 +47,23 @@ class DebugService():
 
         prompt = pctb.run_montar_prompt()
         print(prompt)
+
+
+
+    # ================================================================================================
+    # Executa CreateTableByCSV
+    # ================================================================================================
+    def RunCreateTableByCSV(self):
+        caminho_e_nome_csv="files/descompactados/siconv_convenio.csv"
+        nome_tabela_banco="tb_convenios"
+        llm_model_name="llama3.2:1b"
+
+        ctbc = CreateTableByCSV()
+        ctbc.set_caminho_e_nome_csv(caminho_e_nome_csv= caminho_e_nome_csv)
+        ctbc.set_nome_tabela_banco(nome_tabela_banco= nome_tabela_banco)
+        ctbc.set_llm_model_name(llm_model_name=llm_model_name)
+        resultado_llm = ctbc.run_create_table_by_csv()
+        print(resultado_llm)
 
 
 

@@ -136,7 +136,9 @@ def run_debug():
    
     # ds.RunZipManager()
 
-    ds.RunPromptCreateTableCsv()
+    # ds.RunPromptCreateTableCsv()
+
+    ds.RunCreateTableByCSV()
 
     print("Terminou a execução!!")
 

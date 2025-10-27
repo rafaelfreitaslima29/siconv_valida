@@ -38,17 +38,8 @@ class LLMManager:
         self._question = question
 
 
-    def runOllama(self):
+    def run_ollama(self):
         prompt = ChatPromptTemplate.from_template(self._template)
-        
-        # if self._vbox_use:
-        #     # USADO CASO ESTIVER USANDO NO VITUAL BOX
-        #     model = OllamaLLM(
-        #         model=self._model, 
-        #         base_url='http://10.0.2.2:11434'
-        #     ) 
-        # else:
-        # OLLAMA NA MESMA MAQUINA
         model = OllamaLLM( model=self._model )
 
         chain = prompt | model
@@ -57,7 +48,7 @@ class LLMManager:
 
 
 
-    def runOpenIA(self):
+    def run_open_ia(self):
         prompt =  PromptTemplate( 
             input_variables= ["question"],
             template=self._template

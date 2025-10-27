@@ -1,40 +1,62 @@
-# from app_log.AppLog import AppLog
-from src.llm.prompt.prompt_csv_create_tb import PromptCsvCreateTable
 from llm.llm_manager import LLMManager
+from llm.prompt.prompt_create_table_by_csv import PromptCreateTableCsv
+
+
+# from src.llm.prompt.prompt_csv_create_tb import PromptCsvCreateTable
 
 
 class CreateTableByCSV():
     def __init__(self):
-        pass
-        # self._log = log = AppLog(name="src/llm/CSV2CreateTable.py").get_logger()
+        self._caminho_e_nome_csv = None
+        self._nome_tabela_banco = None
+        self._llm_model_name = None
 
 
 
-    def run_create_table_by_csv(self, caminho_csv:str="", nome_tabela_banco:str = "", model_name:str = ""):
-        # path_and_file_csv = "data/extracted/siconv_convenio.csv"
-        # nome_tb_banco = "pcr_siconv.tb_convenios"
+    def set_caminho_e_nome_csv(self, caminho_e_nome_csv):
+        self._caminho_e_nome_csv = caminho_e_nome_csv
 
-        prompt = PromptCsvCreateTable(path_and_file_csv=caminho_csv, nome_tb_banco=nome_tabela_banco)
-        template = prompt.GetPrompt()
+
+
+    def set_nome_tabela_banco(self, nome_tabela_banco):
+        self._nome_tabela_banco = nome_tabela_banco
+
+
+
+    def set_llm_model_name(self, llm_model_name):
+        self._llm_model_name = llm_model_name
+
+
+
+    def run_create_table_by_csv(self,):
+        prompt = PromptCreateTableCsv()
+        prompt.set_caminho_e_nome_csv(caminho_e_nome_csv= self._caminho_e_nome_csv)
+        prompt.set_nome_tabela_banco(nome_tabela_banco= self._nome_tabela_banco)
+        template = prompt.run_montar_prompt()
 
         try:
             llm_manager = LLMManager()
-            llm_manager.set_model(model=model_name)
+            llm_manager.set_model(model=self._llm_model_name)
             llm_manager.set_template(template=template)
-            llm_manager.set_question(question= prompt.GetQuestion() )
-             
-            if model_name.startswith("gpt"):
+
+            llm_manager.set_model(model= self._llm_model_name)
+            llm_manager.set_template(template=template)
+            llm_manager.set_question(question= "Retorne o pedido" )
+
+            if self._llm_model_name == None:
+                print("ERRO Falta preencher o Nome do Modelo LLM")
+            if self._llm_model_name.startswith("gpt"):
                 # Se estiver usando o ChatGPT
-                resultado = llm_manager.runOpenIA()
+                resultado = llm_manager.run_open_ia()
             else:
                 # Outras LLM
-                resultado = llm_manager.run()
-            
-            self._log.info(resultado)
+                resultado = llm_manager.run_ollama()
+
+            print(resultado)
 
             return resultado
-
         except Exception as e:
-            self._log.info(e)
             return False
+
+
 
