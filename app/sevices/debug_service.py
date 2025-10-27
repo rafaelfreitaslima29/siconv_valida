@@ -3,7 +3,9 @@ from utils.file_downloader import FileDownloader
 from utils.zip_manager import ZipManager
 from llm.prompt.prompt_create_table_by_csv import PromptCreateTableCsv
 from llm.prompt.prompt_verificar_alteracao_nomes_colunas import PromptVerificarAlteracaoNomesColunas
+from llm.prompt.prompt_verificar_adicao_colunas import PromptVerificarAdicaoColunas
 from llm.create_table_by_csv import CreateTableByCSV
+
 
 
 
@@ -81,6 +83,43 @@ CREATE TABLE public.servidores (
 
         prompt = prmpt_make.run_montar_prompt()
         print(prompt)
+
+
+
+
+    # ================================================================================================
+    # Executa PromptVerificarAdicaoColunas
+    # ================================================================================================
+    def RunPromptVerificarAdicaoColunas(self):
+        create_table_existente = """
+CREATE TABLE public.servidores (
+    id SERIAL PRIMARY KEY,
+    nome TEXT NOT NULL,
+    cpf VARCHAR(11),
+    cargo TEXT,
+    remuneracao NUMERIC(12,2)
+);
+        """
+
+        create_table_novo = """
+CREATE TABLE public.servidores (
+    id SERIAL PRIMARY KEY,
+    nome_completo TEXT NOT NULL,
+    cpf VARCHAR(11),
+    cargo TEXT,
+    categoria TEXT,
+    remuneracao NUMERIC(12,2)
+);
+        """
+        prmpt_make = PromptVerificarAlteracaoNomesColunas()
+        prmpt_make.set_create_table_existente(create_table_existente=create_table_existente)
+        prmpt_make.set_create_table_novo(create_table_novo=create_table_novo)
+
+        prompt = prmpt_make.run_montar_prompt()
+        print(prompt)
+
+
+
 
 
 

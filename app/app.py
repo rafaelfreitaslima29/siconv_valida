@@ -140,7 +140,9 @@ def run_debug():
 
     # ds.RunCreateTableByCSV()
 
-    ds.RunPromptVerificarAlteracaoNomesColunas()
+    # ds.RunPromptVerificarAlteracaoNomesColunas()
+
+    ds.RunPromptVerificarAdicaoColunas()
 
     print("Terminou a execução!!")
 
