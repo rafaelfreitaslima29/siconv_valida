@@ -56,4 +56,16 @@ class LLMManager:
         model = ChatOpenAI(model= self._model, temperature=0.7)
         chain = prompt | model | StrOutputParser()
         txt = chain.invoke({"question": self._question })
-        return txt
+       
+
+        txt_formatado = txt  #.replace("\\n", "\n")
+
+        print(self.__class__.__name__)
+        print(txt_formatado)
+
+        txt_formatado = f"""
+            <pre>{txt_formatado}</pre>
+        """
+       
+       
+        return txt_formatado

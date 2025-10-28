@@ -25,16 +25,6 @@ Regras de normalização (obrigatórias)
 4) Se um nome existir em ambos, considere-o “inalterado”.
 5) Para suspeita de renomeação, use similaridade de string/semântica (ex.: "nome" ↔ "nome_completo" pode ser renomeação; "uf" ↔ "estado" possivelmente também). Seja cauteloso(a) ao inferir renomeações quando existirem múltiplas correspondências plausíveis.
 
-Formato de saída (JSON válido, sem texto extra)
-{
-  "unchanged_columns": ["..."],
-  "renamed_columns": [
-    { "from": "nome_antigo", "to": "nome_novo", "confidence": 0.0_to_1.0, "reason": "breve justificativa" }
-  ],
-  "added_columns": ["..."],
-  "removed_columns": ["..."],
-  "notes": "observações sucintas sobre ambiguidades ou decisões conservadoras"
-}
 
 Procedimento
 1) Extrair apenas a lista de nomes de colunas de cada DDL (após normalização).
@@ -61,17 +51,17 @@ CREATE TABLE pessoas (
   data_nascimento DATE
 );
 
-Saída esperada (exemplo)
-{
-  "unchanged_columns": ["id", "cpf"],
-  "renamed_columns": [
-    { "from": "nome", "to": "nome_completo", "confidence": 0.8, "reason": "mesmo conceito; 'nome' expandido" },
-    { "from": "dt_nascimento", "to": "data_nascimento", "confidence": 0.9, "reason": "abreviação vs. forma completa" }
-  ],
-  "added_columns": [],
-  "removed_columns": [],
-  "notes": "Tipos e PK ignorados conforme instruções."
-}
+Saída esperada (exemplo):
+  colunas não alteradas: ["id", "cpf"],
+  
+  colunas renomeadas:  
+    de: "nome", para: "nome_completo"
+    
+  
+  
+  
+  notes": "Tipos e PK ignorados conforme instruções.
+
 """
 
 

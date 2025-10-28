@@ -30,9 +30,15 @@
 # ================================================================================================
 # ================================================================================================
 # PARA O Flesk
-from flask import Flask, render_template, request, url_for, redirect, send_from_directory, jsonify
+from flask import Flask, render_template, Response, request, url_for, redirect, send_from_directory, jsonify
 import requests
-from  sevices.debug_service import DebugService
+import json
+from sevices.create_table_by_csv_service import CreateTableByCsvService
+from sevices.verificar_alteracao_nomes_colunas_service import VerificarAlteracaoNomesColunasService
+from sevices.debug_service import DebugService
+
+
+
 # from app_log.AppLog import AppLog
 # BANCO DE DADOS
 # from sqlalchemy import text
@@ -91,13 +97,14 @@ def index():
             "link": "/debug"
         },
         {
-            "nome": "llama3.2:1b", 
-            "link": "/run_llama3_2_1b"
-        } #,
-        # {
-        #     "nome": "llama3.2:3b", 
-        #     "link": "/run_llama3_2_3b"
-        # },
+            "nome": "run_create_csv llama3.2:1b", 
+            "link": "/run_create_csv_llama3_2_1b"
+        } ,
+        {
+            "nome": "run_verificar_alteracao_nomes_colunas_llama3_2_1b", 
+            "link": "/run_verificar_alteracao_nomes_colunas_llama3_2_1b"
+        }
+        #,
         # {
         #     "nome": "llama3.1:8b", 
         #     "link": "/run_llama3_1_8b"
@@ -131,7 +138,7 @@ def index():
 # ================================================================================================
 @app.route('/debug', methods=['GET'])
 def run_debug():
-    ds = DebugService()
+    # ds = DebugService()
     # ds.RunFileDownloader()
    
     # ds.RunZipManager()
@@ -144,17 +151,26 @@ def run_debug():
 
     # ds.RunPromptVerificarAdicaoColunas()
 
-    ds.RunPromptAjustesTable()
+    # ds.RunPromptAjustesTable()
+
+
+    caminho_e_nome_csv="files/descompactados/siconv_convenio.csv"
+    nome_tabela_banco="tb_convenios"
+    llm_model_name="llama3.2:1b"
+
+    cts = CreateTableByCsvService()
+    cts.set_caminho_e_nome_csv(caminho_e_nome_csv=caminho_e_nome_csv)
+    cts.set_nome_tabela_banco(nome_tabela_banco=nome_tabela_banco)
+    cts.set_llm_model_name(llm_model_name=llm_model_name)
+
+    html = cts.run_llm()
+    print(html)
 
     print("Terminou a execução!!")
 
+    return Response(html, mimetype="text/html")
 
 
-
-    return jsonify({
-            "status_post": 200,
-            "resposta_post": f'- Debug Finalizado!',
-        }), 200
 
 
 
@@ -164,19 +180,82 @@ def run_debug():
 
 
 # ================================================================================================
-# ROTA TESTE MODELO LLAMA 1
+# ROTA LLAMA3.2:1b rum create table csv
 # ================================================================================================
-@app.route('/run_llama3_2_1b', methods=['GET'])
+@app.route('/run_create_csv_llama3_2_1b', methods=['GET'])
 def run_llama3_2_1b():
-    ds = DebugService()
-    text = ds.Run()
-    print(text)
+    caminho_e_nome_csv="files/descompactados/siconv_convenio.csv"
+    nome_tabela_banco="tb_convenios"
+    llm_model_name="llama3.2:1b"
 
-    return jsonify({
-            "status_post": 200,
-            "resposta_post": f'- Debug Finalizado!',
-        }), 200
-   
+    cts = CreateTableByCsvService()
+    cts.set_caminho_e_nome_csv(caminho_e_nome_csv=caminho_e_nome_csv)
+    cts.set_nome_tabela_banco(nome_tabela_banco=nome_tabela_banco)
+    cts.set_llm_model_name(llm_model_name=llm_model_name)
+
+    html = cts.run_llm()
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
+
+
+
+
+
+
+# ================================================================================================
+# ROTA LLAMA3.2:1b verificar_alteracao_nomes_colunas
+# ================================================================================================
+@app.route('/run_verificar_alteracao_nomes_colunas_llama3_2_1b', methods=['GET'])
+def run_verificar_alteracao_nomes_colunas_llama3_2_1b():
+    llm_model_name="llama3.2:1b"
+    
+    create_table_existente = """
+    CREATE TABLE public.servidores (
+        id SERIAL PRIMARY KEY,
+        nome TEXT NOT NULL,
+        cpf VARCHAR(11),
+        cargo TEXT,
+        salario NUMERIC(10,2)
+    );
+    """
+
+    create_table_novo = """
+    CREATE TABLE public.servidores (
+        id SERIAL PRIMARY KEY,
+        nome_completo TEXT NOT NULL,
+        cpf VARCHAR(11),
+        funcao TEXT,
+        remuneracao NUMERIC(12,2)
+    );
+    """
+
+    service = VerificarAlteracaoNomesColunasService()
+    service.set_llm_model_name(llm_model_name= llm_model_name)
+    service.set_create_table_existente(create_table_existente= create_table_existente)
+    service.set_create_table_novo(create_table_novo= create_table_novo)
+
+    html = service.run_llm()
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
