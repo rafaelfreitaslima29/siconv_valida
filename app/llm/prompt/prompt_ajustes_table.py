@@ -41,12 +41,6 @@ ALTER TABLE public.funcionarios
     RENAME COLUMN nome TO nome_completo,
     ALTER COLUMN salario TYPE NUMERIC(12,2);
 
-{
-  "added_columns": ["data_admissao", "status_funcionario"],
-  "renamed_columns": [{"from": "nome", "to": "nome_completo"}],
-  "modified_columns": [{"column": "salario", "from_type": "NUMERIC(10,2)", "to_type": "NUMERIC(12,2)"}],
-  "notes": "Ajustes realizados para alinhar o esquema atual ao novo layout, garantindo compatibilidade para ingestão de dados."
-}
 """
 
 

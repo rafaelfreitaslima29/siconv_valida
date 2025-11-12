@@ -26,13 +26,6 @@ Regras de comparação
 4. Ignore a ordem das colunas.
 5. Retorne apenas as colunas que **existem no novo DDL e não existiam no anterior**.
 
-Formato da saída (JSON válido, sem texto extra)
-{
-  "added_columns": ["nome_coluna1", "nome_coluna2", ...],
-  "total_added": X,
-  "notes": "observações breves sobre correspondência e normalização"
-}
-
 Exemplo de entrada
 -- Versão atual
 CREATE TABLE public.funcionarios (
@@ -52,12 +45,6 @@ CREATE TABLE funcionarios (
     status_funcionario TEXT
 );
 
-Exemplo de saída esperada
-{
-  "added_columns": ["data_admissao", "status_funcionario"],
-  "total_added": 2,
-  "notes": "Colunas novas identificadas apenas pelo nome, tipos e PK ignorados."
-}
 """
 
 

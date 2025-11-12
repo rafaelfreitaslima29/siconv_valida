@@ -33,10 +33,17 @@
 from flask import Flask, render_template, Response, request, url_for, redirect, send_from_directory, jsonify
 import requests
 import json
-from sevices.create_table_by_csv_service import CreateTableByCsvService
-from sevices.verificar_alteracao_nomes_colunas_service import VerificarAlteracaoNomesColunasService
-from sevices.debug_service import DebugService
-
+from sqlalchemy import text
+from db.databases import engine
+from db.models.models import Base
+from db.models.models import Base as bases
+from services.create_table_by_csv_service import CreateTableByCsvService
+from services.verificar_alteracao_nomes_colunas_service import VerificarAlteracaoNomesColunasService
+from services.verificar_adicao_colunas_service import VerificarAdicaoColunasService
+from services.comparar_create_tables_service import CompararCreateTableService
+from services.debug_service import DebugService
+from utils.time_util import TimeUtil
+from experimento.exp_create_table_by_csv_llama_3_2_1b_service import ExpCreateTableByCsvLLama3_2_1bService
 
 
 # from app_log.AppLog import AppLog
@@ -57,20 +64,17 @@ from sevices.debug_service import DebugService
 # ================================================================================================
 #                       APP CONFIG
 # ================================================================================================
-# Variáveis de Ambiente
-# Configura o LOG
-# log = AppLog(name="web main.py").get_logger()
 
 # Configura a estrutura do banco de dados
-# def CriarEstruturaBancoDados():
-#     with engine.connect() as conn:
-#         conn.execute( text('CREATE SCHEMA IF NOT EXISTS gaf;') )
-#         conn.commit()
-#     Base.metadata.create_all(engine)
+def CriarEstruturaBancoDados():
+    with engine.connect() as conn:
+        conn.execute( text('CREATE SCHEMA IF NOT EXISTS siconv_valida;') )
+        conn.commit()
+    Base.metadata.create_all(engine)
 
-#     experimento_Base.metadata.create_all(engine)
+    bases.metadata.create_all(engine)
 
-# CriarEstruturaBancoDados()
+CriarEstruturaBancoDados()
 
 # ================================================================================================
 #                       CONFIG FLASK
@@ -104,27 +108,27 @@ def index():
             "nome": "run_verificar_alteracao_nomes_colunas_llama3_2_1b", 
             "link": "/run_verificar_alteracao_nomes_colunas_llama3_2_1b"
         }
-        #,
-        # {
-        #     "nome": "llama3.1:8b", 
-        #     "link": "/run_llama3_1_8b"
-        # },
-        # {
-        #     "nome": "gpt-4o", 
-        #     "link": "/run_gpt_4o"
-        # },
-        # {
-        #     "nome": "Carga Arquivos CSV Convênios", 
-        #     "link": "/carga_csv_convenios"
-        # },
-        # {
-        #     "nome": "Comparação",
-        #     "link": "/comparacao"
-        # },        
-        # {
-        #     "nome": "verificacao_criacao_tb_csv", 
-        #     "link": "/verificacao_criacao_tb_csv"
-        # }
+        ,
+        {
+             "nome": "/run_verificar_adicao_coluna_llama3_2_1b", 
+             "link": "/run_verificar_adicao_coluna_llama3_2_1b"
+        },
+        {
+            "nome": "/run_prompt_verificar_adicao_coluna_llama3_2_1b", 
+            "link": "/run_prompt_verificar_adicao_coluna_llama3_2_1b"
+        },
+        {
+            "nome": "/run_comparar_create_table_llama3_2_1b", 
+            "link": "/run_comparar_create_table_llama3_2_1b"
+        },
+        {
+            "nome": "/run_time_util",
+            "link": "/run_time_util"
+        },        
+        {
+            "nome": "/run_exp_create_table_by_csv_llama_3_2_1b", 
+            "link": "/run_exp_create_table_by_csv_llama_3_2_1b"
+        }
     ]
 
     return render_template('lista_rotas.html', rotas=rotas)
@@ -249,7 +253,167 @@ def run_verificar_alteracao_nomes_colunas_llama3_2_1b():
 
 
 
+# ================================================================================================
+# ROTA LLAMA3.2:1b PROMPT verificar_alteracao_nomes_colunas
+# ================================================================================================
+@app.route('/run_prompt_verificar_adicao_coluna_llama3_2_1b', methods=['GET'])
+def run_prompt_verificar_adicao_coluna_llama3_2_1b():
+    llm_model_name="llama3.2:1b"
+    
+    create_table_existente = """
+    CREATE TABLE public.servidores (
+        id SERIAL PRIMARY KEY,
+        nome TEXT NOT NULL,
+        cpf VARCHAR(11),
+        salario NUMERIC(10,2)
+    );
+    """
 
+    create_table_novo = """
+    CREATE TABLE public.servidores (
+        id SERIAL PRIMARY KEY,
+        nome_completo TEXT NOT NULL,
+        cpf VARCHAR(11),
+        funcao TEXT,
+        remuneracao NUMERIC(12,2)
+    );
+    """
+
+    debug = DebugService()
+
+    prompt = debug.RunPromptVerificarAdicaoColunas()
+    
+    print(prompt)
+
+    print("Terminou a execução!!")
+
+    return Response("<p>CERTO</p>", mimetype="text/html")
+
+
+
+
+# ================================================================================================
+# ROTA LLAMA3.2:1b verificar_alteracao_nomes_colunas
+# ================================================================================================
+@app.route('/run_verificar_adicao_coluna_llama3_2_1b', methods=['GET'])
+def run_verificar_adicao_coluna_llama3_2_1b():
+    llm_model_name="llama3.2:1b"
+    
+    create_table_existente = """
+    CREATE TABLE public.servidores (
+        id SERIAL PRIMARY KEY,
+        nome TEXT NOT NULL,
+        cpf VARCHAR(11),
+        salario NUMERIC(10,2)
+    );
+    """
+
+    create_table_novo = """
+    CREATE TABLE public.servidores (
+        id SERIAL PRIMARY KEY,
+        nome_completo TEXT NOT NULL,
+        cpf VARCHAR(11),
+        funcao TEXT,
+        remuneracao NUMERIC(12,2)
+    );
+    """
+
+    service = VerificarAdicaoColunasService()
+    service.set_llm_model_name(llm_model_name= llm_model_name)
+    service.set_create_table_existente(create_table_existente= create_table_existente)
+    service.set_create_table_novo(create_table_novo= create_table_novo)
+
+    html = service.run_llm()
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
+
+
+
+
+# ================================================================================================
+# ROTA LLAMA3.2:1b comparar create table
+# ================================================================================================
+@app.route('/run_comparar_create_table_llama3_2_1b', methods=['GET'])
+def run_comparar_create_table_llama3_2_1b():
+    llm_model_name="llama3.2:1b"
+    
+    create_table_existente = """
+    CREATE TABLE public.servidores (
+        id SERIAL PRIMARY KEY,
+        nome TEXT NOT NULL,
+        cpf VARCHAR(11),
+        salario NUMERIC(10,2)
+    );
+    """
+
+    create_table_novo = """
+    CREATE TABLE public.servidores (
+        id SERIAL PRIMARY KEY,
+        nome_completo TEXT NOT NULL,
+        cpf VARCHAR(11),
+        funcao TEXT,
+        remuneracao NUMERIC(12,2)
+    );
+    """
+
+    service = CompararCreateTableService()
+    service.set_llm_model_name(llm_model_name= llm_model_name)
+    service.set_create_table_existente(create_table_existente= create_table_existente)
+    service.set_create_table_novo(create_table_novo= create_table_novo)
+
+    html = service.run_llm()
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
+
+
+
+
+
+# ================================================================================================
+# ROTA TimeUtil
+# ================================================================================================
+@app.route('/run_time_util', methods=['GET'])
+def run_time_util():
+    tu = TimeUtil()
+    inicio = tu.get_time()
+    tu.pause(5)
+    fim = tu.get_time()
+
+
+    html = f'<p>{inicio}  {fim}</p>'
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
+
+
+
+
+
+# ================================================================================================
+# ROTA Experiemnto Create Table by CSV LLama 3.2 1b
+# ================================================================================================
+@app.route('/run_exp_create_table_by_csv_llama_3_2_1b', methods=['GET'])
+def run_exp_create_table_by_csv_llama_3_2_1b():
+
+    for i in range(10):
+        experimento = ExpCreateTableByCsvLLama3_2_1bService()
+        experimento.run()
+        print(f'Execução: {i +1}')
+
+    html = '<p>Terminou</p>'
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
 
 
 
