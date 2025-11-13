@@ -403,7 +403,7 @@ def run_time_util():
 @app.route('/run_exp_create_table_by_csv_llama_3_2_1b', methods=['GET'])
 def run_exp_create_table_by_csv_llama_3_2_1b():
 
-    for i in range(10):
+    for i in range(385):
         experimento = ExpCreateTableByCsvLLama3_2_1bService()
         experimento.run()
         print(f'Execução: {i +1}')
