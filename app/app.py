@@ -44,6 +44,8 @@ from services.comparar_create_tables_service import CompararCreateTableService
 from services.debug_service import DebugService
 from utils.time_util import TimeUtil
 from experimento.exp_create_table_by_csv_llama_3_2_1b_service import ExpCreateTableByCsvLLama3_2_1bService
+from experimento.exp_create_table_by_csv_llama_3_2_3b_service import ExpCreateTableByCsvLLama3_2_3bService
+from experimento.exp_create_table_by_csv_llama_3_1_8b_service import ExpCreateTableByCsvLLama3_1_8bService
 
 
 # from app_log.AppLog import AppLog
@@ -97,6 +99,18 @@ app.config['UPLOAD_FOLDER']         = UPLOAD_FOLDER
 def index():
     rotas = [
         {
+            "nome": "/run_exp_create_table_by_csv_llama_3_1_8b", 
+            "link": "/run_exp_create_table_by_csv_llama_3_1_8b"
+        },
+        {
+            "nome": "/run_exp_create_table_by_csv_llama_3_2_3b", 
+            "link": "/run_exp_create_table_by_csv_llama_3_2_3b"
+        },
+        {
+            "nome": "/run_exp_create_table_by_csv_llama_3_2_1b", 
+            "link": "/run_exp_create_table_by_csv_llama_3_2_1b"
+        },
+        {
             "nome": "DEBUG DE CÓDIGO", 
             "link": "/debug"
         },
@@ -124,10 +138,6 @@ def index():
         {
             "nome": "/run_time_util",
             "link": "/run_time_util"
-        },        
-        {
-            "nome": "/run_exp_create_table_by_csv_llama_3_2_1b", 
-            "link": "/run_exp_create_table_by_csv_llama_3_2_1b"
         }
     ]
 
@@ -416,6 +426,46 @@ def run_exp_create_table_by_csv_llama_3_2_1b():
     return Response(html, mimetype="text/html")
 
 
+
+# ================================================================================================
+# ROTA Experiemnto Create Table by CSV LLama 3.2 3b
+# ================================================================================================
+@app.route('/run_exp_create_table_by_csv_llama_3_2_3b', methods=['GET'])
+def run_exp_create_table_by_csv_llama_3_2_3b():
+
+    for i in range(385):
+        experimento = ExpCreateTableByCsvLLama3_2_3bService()
+        experimento.run()
+        print(f'Execução: {i +1}')
+
+    html = '<p>Terminou</p>'
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
+
+
+
+# ================================================================================================
+# ROTA Experiemnto Create Table by CSV LLama 3.1 8b
+# ================================================================================================
+@app.route('/run_exp_create_table_by_csv_llama_3_1_8b', methods=['GET'])
+def run_exp_create_table_by_csv_llama_3_1_8b():
+
+    # for i in range(385):
+    
+    for i in range(324):
+        experimento = ExpCreateTableByCsvLLama3_1_8bService()
+        experimento.run()
+        print(f'Execução: {i +1}')
+
+    html = '<p>Terminou</p>'
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
 
 
 

@@ -1,0 +1,14 @@
+select
+--	id,
+	llm_model_name,
+	count(llm_model_name),
+	(count(llm_model_name) - 385) as falta
+--	caminho_e_nome_csv,
+--	nome_tabela_banco,
+--	inicio_execucao,
+--	fim_execucao,
+--	resultado
+from
+	siconv_valida.tb_create_table_by_csv
+group by llm_model_name 
+	;
