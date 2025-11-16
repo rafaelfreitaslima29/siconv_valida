@@ -100,6 +100,10 @@ app.config['UPLOAD_FOLDER']         = UPLOAD_FOLDER
 def index():
     rotas = [
         {
+            "nome": "/run_exp_verificar_alteracao_nomes_colunas_llama_todos", 
+            "link": "/run_exp_verificar_alteracao_nomes_colunas_llama_todos"
+        },
+        {
             "nome": "/run_exp_verificar_alteracao_nomes_colunas_llama_3_1_8b", 
             "link": "/run_exp_verificar_alteracao_nomes_colunas_llama_3_1_8b"
         },
@@ -532,8 +536,8 @@ def run_exp_verificar_alteracao_nomes_colunas_llama_3_2_3b():
 @app.route('/run_exp_verificar_alteracao_nomes_colunas_llama_3_1_8b', methods=['GET'])
 def run_exp_verificar_alteracao_nomes_colunas_llama_3_1_8b():
 
-    # for i in range(385):    
-    for i in range(1):
+    for i in range(385):
+    # for i in range(146):
         experimento = ExpVerificarAlteracaoNomesColunasLLama_3_1_8b_service()
         experimento.run()
         print(f'Execução: {i +1}')
@@ -546,6 +550,43 @@ def run_exp_verificar_alteracao_nomes_colunas_llama_3_1_8b():
     return Response(html, mimetype="text/html")
 
 
+
+
+# ================================================================================================
+# ROTA Experiemnto Verificar Alterações de Nomes Colunas LLama Todos
+# ================================================================================================
+@app.route('/run_exp_verificar_alteracao_nomes_colunas_llama_todos', methods=['GET'])
+def run_exp_verificar_alteracao_nomes_colunas_llama_todos():
+
+    for i in range(385):
+        experimento = ExpVerificarAlteracaoNomesColunasLLama_3_1_8b_service()
+        experimento.run()
+        print(f'Execução: {i +1}')
+
+    html = '<p>Terminou LLama_3_1_8b</p>'
+
+
+    for i in range(385):
+        experimento = ExpVerificarAlteracaoNomesColunasLLama_3_2_1b_service()
+        experimento.run()
+        print(f'Execução: {i +1}')
+
+    html = f'{html}  <p>Terminou LLama_3_2_1b</p>'
+
+
+    for i in range(385):
+        experimento = ExpVerificarAlteracaoNomesColunasLLama_3_2_3b_service()
+        experimento.run()
+        print(f'Execução: {i +1}')
+
+    html = f'{html}  <p>Terminou LLama_3_2_3b</p>'
+
+
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
 
 
 

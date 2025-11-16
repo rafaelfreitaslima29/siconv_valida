@@ -1,17 +1,18 @@
 select
---	id,
-	llm_model_name,
-	count(llm_model_name),
-	(count(llm_model_name) - 385) as falta
---	caminho_e_nome_csv,
---	nome_tabela_banco,
---	inicio_execucao,
---	fim_execucao,
---	resultado
+	id,
+	inicio_execucao::timestamp,
+	fim_execucao::timestamp,
+	(fim_execucao::timestamp - inicio_execucao::timestamp) AS tempo,
+	SUM( (fim_execucao::timestamp - inicio_execucao::timestamp) ) over (partition by llm_model_name) as tempo_total_execucao,
+    AVG( (fim_execucao::timestamp - inicio_execucao::timestamp) ) over (PARTITION BY llm_model_name) AS media,
+    385 as total,
+    COUNT(*) OVER (PARTITION BY llm_model_name) AS total_execucoes_llm_model,
+    ROUND(((  (COUNT(*) OVER (PARTITION BY llm_model_name)) / 385.0 ) * 100.0)::numeric, 2) ||'%' AS completou,
+    385 - COUNT(*) OVER (PARTITION BY llm_model_name) as falta,
+    resultado
 from
 	siconv_valida.tb_verificar_alteracao_nome_coluna
-group by llm_model_name 
-	;
+;
 
 
 
