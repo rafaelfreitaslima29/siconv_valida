@@ -46,8 +46,9 @@ from utils.time_util import TimeUtil
 from experimento.exp_create_table_by_csv_llama_3_2_1b_service import ExpCreateTableByCsvLLama3_2_1bService
 from experimento.exp_create_table_by_csv_llama_3_2_3b_service import ExpCreateTableByCsvLLama3_2_3bService
 from experimento.exp_create_table_by_csv_llama_3_1_8b_service import ExpCreateTableByCsvLLama3_1_8bService
-
-
+from experimento.exp_verificar_alteracao_nomes_colunas_llama_3_2_1b_service import ExpVerificarAlteracaoNomesColunasLLama_3_2_1b_service
+from experimento.exp_verificar_alteracao_nomes_colunas_llama_3_2_3b_service import ExpVerificarAlteracaoNomesColunasLLama_3_2_3b_service
+from experimento.exp_verificar_alteracao_nomes_colunas_llama_3_1_8b_service import ExpVerificarAlteracaoNomesColunasLLama_3_1_8b_service
 # from app_log.AppLog import AppLog
 # BANCO DE DADOS
 # from sqlalchemy import text
@@ -98,6 +99,18 @@ app.config['UPLOAD_FOLDER']         = UPLOAD_FOLDER
 @app.route("/")
 def index():
     rotas = [
+        {
+            "nome": "/run_exp_verificar_alteracao_nomes_colunas_llama_3_1_8b", 
+            "link": "/run_exp_verificar_alteracao_nomes_colunas_llama_3_1_8b"
+        },
+        {
+            "nome": "/run_exp_verificar_alteracao_nomes_colunas_llama_3_2_3b", 
+            "link": "/run_exp_verificar_alteracao_nomes_colunas_llama_3_2_3b"
+        },
+        {
+            "nome": "/run_exp_verificar_alteracao_nomes_colunas_llama_3_2_1b", 
+            "link": "/run_exp_verificar_alteracao_nomes_colunas_llama_3_2_1b"
+        },
         {
             "nome": "/run_exp_create_table_by_csv_llama_3_1_8b", 
             "link": "/run_exp_create_table_by_csv_llama_3_1_8b"
@@ -470,234 +483,69 @@ def run_exp_create_table_by_csv_llama_3_1_8b():
 
 
 
+# ================================================================================================
+# ROTA Experiemnto Verificar Alterações de Nomes Colunas LLama 3.2 1b
+# ================================================================================================
+@app.route('/run_exp_verificar_alteracao_nomes_colunas_llama_3_2_1b', methods=['GET'])
+def run_exp_verificar_alteracao_nomes_colunas_llama_3_2_1b():
 
+    # for i in range(385):
+    
+    for i in range(61):
+        experimento = ExpVerificarAlteracaoNomesColunasLLama_3_2_1b_service()
+        experimento.run()
+        print(f'Execução: {i +1}')
 
+    html = '<p>Terminou</p>'
+    print(html)
 
+    print("Terminou a execução!!")
 
-
-
-
-# ROTA PÁGINA INICIAL
-# @app.route("/comparacao")
-# def pg_comparacao():
-#     rotas = 'rotas'
-#     return render_template('comparacao.html', rotas=rotas)
+    return Response(html, mimetype="text/html")
 
 
 
 # ================================================================================================
-#                   ROTAS DE MANUTENÇÃO DAS CARGAS E EXECUÇÃO DE TAREFAS
+# ROTA Experiemnto Verificar Alterações de Nomes Colunas LLama 3.2 3b
 # ================================================================================================
+@app.route('/run_exp_verificar_alteracao_nomes_colunas_llama_3_2_3b', methods=['GET'])
+def run_exp_verificar_alteracao_nomes_colunas_llama_3_2_3b():
 
+    # for i in range(385):    
+    for i in range(15):
+        experimento = ExpVerificarAlteracaoNomesColunasLLama_3_2_3b_service()
+        experimento.run()
+        print(f'Execução: {i +1}')
 
+    html = '<p>Terminou</p>'
+    print(html)
 
-# ================================================================================================
-# ATUALIZAR CARGA DE DADOS FEDERAIS TRANSFERE GOV
-# ================================================================================================
-# @app.route('/carga_csv_convenios', methods=['GET'])
-# def update_carga():
-#     try:
-#         url = 'https://repositorio.dados.gov.br/seges/detru/siconv.zip'
-        
-#         log.info("# => /carga_csv_convenios - Início atualização da carga de dados federais")
+    print("Terminou a execução!!")
 
-#         fd = FileDownloader()
-#         fd.set_url(url=url)
-#         fd.download()
-
-#         log.info("# => => Base baixada")
-
-#         log.info("# => => Início descompactação da base de dados")
-#         # EXTRACT FILES
-#         zip_path = "data/raw/siconv.zip"
-#         extract_to = "data/extracted"
-#         zm = ZipManager()
-#         zm.extract(zip_path=zip_path, extract_to=extract_to)
-#         log.info("# => => Base descompactada")
-#         log.info("# => Atualização da carga de dados federais concluída com sucesso!")
-
-#         return jsonify({
-#             "status_post": 200,
-#             "resposta_post": 'Atualização da carga de dados federais iniciada com sucesso!',
-#         }), 200
-#     except requests.exceptions.RequestException as e:
-#         return jsonify({
-#             "erro": "Erro ao atualizar base!",
-#             "detalhes": str(e)
-#         }), 500
+    return Response(html, mimetype="text/html")
 
 
 
 # ================================================================================================
-# ROTA TESTE MODELO 1
+# ROTA Experiemnto Verificar Alterações de Nomes Colunas LLama 3.1 8b
 # ================================================================================================
-# @app.route('/debug', methods=['GET'])
-# def run_debug():
+@app.route('/run_exp_verificar_alteracao_nomes_colunas_llama_3_1_8b', methods=['GET'])
+def run_exp_verificar_alteracao_nomes_colunas_llama_3_1_8b():
 
-#     tam_amostra = TamanhoAmostra()
-#     tam_amostra = tam_amostra.CalcularTamanhoAmostraProporcao()
-#     log.info(f'Tamanho da Amostra:{tam_amostra}')
+    # for i in range(385):    
+    for i in range(1):
+        experimento = ExpVerificarAlteracaoNomesColunasLLama_3_1_8b_service()
+        experimento.run()
+        print(f'Execução: {i +1}')
 
-#     # for i in range(385): 1 vez 100 + 200
-#     for i in range(39):
-        
-#         # 385
-#         # service = AvaliacaoChatGPT_4o_Service()
-#         # service.Run()
+    html = '<p>Terminou</p>'
+    print(html)
 
-#         # 385
-#         # service = AvaliacaoLlama_3_2_1b_Service()
-#         # service.Run()
+    print("Terminou a execução!!")
 
-#         # 385 
-#         # service = AvaliacaoLlama_3_2_3b_Service()
-#         # service.Run()
-        
-#         # 385
-#         # service = AvaliacaoLlama_3_1_8b_Service()
-#         # service.Run()
-        
-#         log.info(f'====> EXECUÇÃO:{i}')
-
-#     log.info("##### FIM ######" )
-
-#     return jsonify({
-#             "status_post": 200,
-#             "resposta_post": f'- Debug Finalizado!',
-#         }), 200
-   
+    return Response(html, mimetype="text/html")
 
 
 
 
-# ================================================================================================
-# ROTA TESTE MODELO 1
-# ================================================================================================
-# @app.route('/verificacao_criacao_tb_csv', methods=['GET'])
-# def run_verificacao_criacao_tb_csv():
 
-#     verif = VerificarMetricas()
-#     verif.Verificar()
-
-
-#     log.info("##### FIM ######" )
-
-#     return jsonify({
-#             "status_post": 200,
-#             "resposta_post": f'- Debug Finalizado!',
-#         }), 200
-   
-
-
-# ================================================================================================
-# ROTA TESTE MODELO 1
-# ================================================================================================
-# @app.route('/cenario_execucao', methods=['GET'])
-# def run_cenario_execucao():
-#     model = 'llama3.1:8b'
-# #     # model = 'llama3.2:1b'
-# #     # model = 'llama3.2:3b'
-# #     # model = 'gpt-4o'
-
-#     # Testar tamanho da amostra
-#     calc_tam = TamanhoAmostra()
-#     log.info(f"TAMANHO DA AMOSTRA: {calc_tam.CalcularTamanhoAmostraProporcao()}")
-
-#     # Ajusta o Timezone
-#     timezone = pytz.timezone('America/Sao_Paulo')
-#     offset_hours = -3
-#     offset = timedelta(hours=offset_hours)
-
-#     log.info("##### INÍCIO ######" )pass
-#     exec_start = timezone.localize(datetime.now() + offset ).strftime('%Y-%m-%d %H:%M:%S')
-
-#     # DDL Tabela Banco de Dados
-#     get_ddl = GetDDL()
-#     db_ddl_create_table = get_ddl.Get()
-
-#     # DDL CSV
-#     path_and_file_csv = 'data/extracted/siconv_convenio.csv'
-#     nome_tb_banco = 'pcr_siconv.tb_convenios'
-
-#     create_csv_ddl = CSV2CreateTable()
-#     csv_create_table = create_csv_ddl.GetCreateTabelByCSV(path_and_file_csv=path_and_file_csv, nome_tb_banco=nome_tb_banco, model_name=model)
-
-#     tbdb_vs_tbcsv = TbDb_Vs_TbCSV()
-#     result = tbdb_vs_tbcsv.GetComparison(csv_create_table=csv_create_table, db_ddl_create_table=db_ddl_create_table, model_name=model)
-#     exec_end = timezone.localize(datetime.now() + offset ).strftime('%Y-%m-%d %H:%M:%S')
-
-#     # SALVAR NO BANCO DE DADOS
-#     model = TbComparacaoModel(
-#         tb_name=nome_tb_banco, 
-#         file_csv_name= path_and_file_csv, 
-#         create_table_from_csv= csv_create_table,
-#         create_table_from_table= db_ddl_create_table,
-#         result= result,
-#         exec_start= str(exec_start), 
-#         exec_end= exec_end,
-#         vlr_avaliacao = False
-#     )
-
-#     repository = TbComparacaoRepository()
-#     repository.Insert(model=model)
-
-#     # DEBUG
-#     log.info(db_ddl_create_table)
-#     log.info(csv_create_table)
-#     # log.info(prompt)
-
-#     log.info("##### FIM ######" )
-
-#     return jsonify({
-#             "status_post": 200,
-#             "resposta_post": f'- Debug Finalizado!',
-#         }), 200
-   
-
-
-
-
-# # ================================================================================================
-# # ATUALIZAR CARGA DE DADOS FEDERAIS TRANSFERE GOV
-# # ================================================================================================
-# # ROTA PÁGINA INICIAL
-# @app.route("/run_llama3_1_8b")
-# def rota_testes():
-#     # model = 'llama3.2:1b'
-#     model = 'llama3.1:8b'
-#     # model = 'llama3.2:3b'
-#     # model = 'gpt-4o'
-#     # model = 'gpt-4.1-nano'
-
-
-#     path_and_file_csv = "data/extracted/siconv_convenio.csv"
-#     nome_tb_banco = "pcr_siconv.tb_convenios"
-
-#     prompt = PromptCsvCreateTable(path_and_file_csv=path_and_file_csv, nome_tb_banco=nome_tb_banco)
-
-#     template = prompt.GetPrompt()
-
-#     try:
-#         llm_manager = LLMManager()
-#         llm_manager.set_model(model=model)
-#         llm_manager.set_template(template=template)
-#         llm_manager.set_question(question= prompt.GetQuestion )
-#         resultado = llm_manager.run()
-#         # resultado = llm_manager.runOpenIA()
-#         log.info(resultado)
-
-#         # Data Hora de execução
-#         data_hora = datetime.now()
-#         data_hora = data_hora + timedelta(hours=-3)
-#         data_hora = data_hora.strftime("%d/%m/%Y %H:%M")
-
-#         return jsonify({
-#             "status_post": 200,
-#             "resposta_post": f'{ data_hora } - Teste Finalizado! \n{resultado}',
-#         }), 200
-#     # 
-#     except requests.exceptions.RequestException as e:
-#         return jsonify({
-#             "erro": "Erro ao executar!",
-#             "detalhes": str(e)
-#         }), 500

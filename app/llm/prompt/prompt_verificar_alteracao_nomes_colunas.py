@@ -7,61 +7,53 @@ class PromptVerificarAlteracaoNomesColunas():
         self._create_table_existente = None
         self._create_table_novo = None
         self._txt_prompt = """
-Contexto
-Você é um(a) especialista em SQL (PostgreSQL) e comparação de esquemas. Sua tarefa é comparar dois comandos CREATE TABLE e indicar se houve mudança de nomes de colunas, ignorando completamente tipos de dados, chaves, defaults, comentários, ordem das colunas e quaisquer outras propriedades.
+Contexto:
+Compare dois comandos CREATE TABLE e identifique apenas renomeações de colunas, ignorando todos os outros aspectos.
 
-Objetivo
-Detectar renomeações, adições e remoções de colunas considerando apenas os nomes (case-insensitive). Se houver ambiguidade, seja conservador(a) e explique.
+Entrada
 
-Entradas
-- CREATE TABLE (atual): [[DDL_ATUAL]]
+DDL atual: 
+[[DDL_ATUAL]]
 
-- CREATE TABLE (novo): [[DDL_NOVO]]
-
-Regras de normalização (obrigatórias)
-1) Compare nomes de colunas sem aspas, sem acentos e case-insensitive (ex.: "CPF", cpf, Cpf → cpf).
-2) Ignore tudo além do identificador da coluna (tipos, NOT NULL, DEFAULT, CONSTRAINT, COMMENT, etc.).
-3) Ignore a ordem das colunas.
-4) Se um nome existir em ambos, considere-o “inalterado”.
-5) Para suspeita de renomeação, use similaridade de string/semântica (ex.: "nome" ↔ "nome_completo" pode ser renomeação; "uf" ↔ "estado" possivelmente também). Seja cauteloso(a) ao inferir renomeações quando existirem múltiplas correspondências plausíveis.
+DDL novo: 
+[[DDL_NOVO]]
 
 
-Procedimento
-1) Extrair apenas a lista de nomes de colunas de cada DDL (após normalização).
-2) Identificar interseção (unchanged).
-3) Para os nomes presentes apenas no DDL atual, tentar pareá-los com nomes presentes apenas no DDL novo:
-   3.1) Propor renomeações quando houver forte evidência lexical/semântica (ex.: distância pequena, sinônimos/siglas usuais).
-   3.2) Quando não houver evidência suficiente, classificar como removed (no atual) e added (no novo).
-4) Preencher o JSON exatamente no formato solicitado. Não inclua comentários fora do JSON.
+Regras obrigatórias:
 
-Exemplo mínimo
--- Atual
-CREATE TABLE public.pessoas (
-  id INTEGER PRIMARY KEY,
-  Nome TEXT NOT NULL,
-  cpf TEXT,
-  dt_nascimento DATE
-);
+Compare nomes de colunas sem aspas, sem acentos e ignorando maiúsculas/minúsculas.
 
--- Novo
-CREATE TABLE pessoas (
-  id BIGINT PRIMARY KEY,
-  nome_completo TEXT NOT NULL,
-  cpf TEXT,
-  data_nascimento DATE
-);
+Ignore tipos, chaves, defaults, comentários, ordem das colunas etc.
 
-Saída esperada (exemplo):
-  colunas não alteradas: ["id", "cpf"],
-  
-  colunas renomeadas:  
-    de: "nome", para: "nome_completo"
-    
-  
-  
-  
-  notes": "Tipos e PK ignorados conforme instruções.
+Para decidir se uma coluna foi renomeada, use similaridade lexical/semântica.
 
+Seja conservador: se houver dúvida, não classifique como renomeação.
+
+Não retorne colunas adicionadas, removidas ou inalteradas — apenas renomeações.
+
+Proibido retornar qualquer código, incluindo Python, SQL, JSON, pseudocódigo ou trechos formatados como código.
+
+
+O que deve fazer:
+
+Extrair e normalizar apenas os nomes das colunas dos dois DDLs.
+
+Detectar correspondências prováveis de renomeação entre nomes exclusivos do DDL atual e nomes exclusivos do DDL novo.
+
+Retornar somente a lista de renomeações no formato abaixo.
+
+
+Formato da saída (único formato permitido):
+
+Renomeações de colunas:
+de: NOME_ANTIGO → para: NOME_NOVO
+de: OUTRO_ANTIGO → para: OUTRO_NOVO
+
+
+Se não houver renomeações, retornar apenas:
+
+Renomeações de colunas:
+(nenhuma)
 """
 
 
