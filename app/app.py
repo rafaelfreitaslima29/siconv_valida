@@ -44,6 +44,9 @@ from services.comparar_create_tables_service import CompararCreateTableService
 from services.debug_service import DebugService
 from utils.time_util import TimeUtil
 
+from multiprocessing import Process, Queue
+import time
+
 from experimento.exp_verificar_adicao_colunas_llama_3_1_8b_service import ExpVerificarAdicaoColunasLLama_3_1_8b_service
 
 from experimento.exp_create_table_by_csv_llama_3_2_1b_service import ExpCreateTableByCsvLLama3_2_1bService
@@ -52,7 +55,8 @@ from experimento.exp_create_table_by_csv_llama_3_1_8b_service import ExpCreateTa
 from experimento.exp_verificar_alteracao_nomes_colunas_llama_3_2_1b_service import ExpVerificarAlteracaoNomesColunasLLama_3_2_1b_service
 from experimento.exp_verificar_alteracao_nomes_colunas_llama_3_2_3b_service import ExpVerificarAlteracaoNomesColunasLLama_3_2_3b_service
 from experimento.exp_verificar_alteracao_nomes_colunas_llama_3_1_8b_service import ExpVerificarAlteracaoNomesColunasLLama_3_1_8b_service
-
+from experimento.exp_ajustes_tabela_llama_3_1_8b_service import ExpAjustesTabelaLLama_3_1_8b_service
+from experimento.exp_ajustes_tabela_llama_3_2_3b_service import ExpAjustesTabelaLLama_3_2_3b_service
 
 
 
@@ -106,6 +110,14 @@ app.config['UPLOAD_FOLDER']         = UPLOAD_FOLDER
 @app.route("/")
 def index():
     rotas = [
+        {
+            "nome": "/run_exp_ajustes_tabela_llama_3_2_3b", 
+            "link": "/run_exp_ajustes_tabela_llama_3_2_3b"
+        },
+        {
+            "nome": "/run_exp_ajustes_tabela_llama_3_1_8b", 
+            "link": "/run_exp_ajustes_tabela_llama_3_1_8b"
+        },
         {
             "nome": "/run_exp_verificar_adicao_colunas_llama_3_1_8b", 
             "link": "/run_exp_verificar_adicao_colunas_llama_3_1_8b"
@@ -211,6 +223,57 @@ def run_debug():
     print("Terminou a execução!!")
 
     return Response(html, mimetype="text/html")
+
+
+
+
+
+
+# ================================================================================================
+# ROTA Experiemnto Ajustes Tabela LLama 3.2 3b
+# ================================================================================================
+@app.route('/run_exp_ajustes_tabela_llama_3_2_3b', methods=['GET'])
+def run_exp_ajustes_tabela_llama_3_2_3b():
+    
+
+    # for i in range(385):
+    for i in range(68):
+        experimento = ExpAjustesTabelaLLama_3_2_3b_service()
+        experimento.run()
+        print(f'Execução: {i +1}')
+
+        TimeUtil().pause(40)
+    html = '<p>Terminou</p>'
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
+
+
+
+
+
+
+# ================================================================================================
+# ROTA Experiemnto Ajustes Tabela LLama 3.1 8b
+# ================================================================================================
+@app.route('/run_exp_ajustes_tabela_llama_3_1_8b', methods=['GET'])
+def run_exp_ajustes_tabela_llama_3_1_8b():
+
+    # for i in range(385):
+    for i in range(375):
+        experimento =  ExpAjustesTabelaLLama_3_1_8b_service()
+        experimento.run()
+        print(f'Execução: {i +1}')
+
+    html = '<p>Terminou</p>'
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
+
 
 
 

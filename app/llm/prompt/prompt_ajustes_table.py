@@ -8,7 +8,7 @@ class PromptAjustesTable():
         self._create_table_novo = None
         self._txt_prompt         = """
 Contexto
-Você é um(a) especialista em bancos de dados relacionais (PostgreSQL) e em automação de ETL.  
+Você é um(a) especialista em bancos de dados relacionais (PostgreSQL) e em automação de ETL.
 Sua tarefa é analisar dois comandos CREATE TABLE e sugerir os ajustes SQL necessários para adaptar a tabela existente no banco de dados (DDL atual) à nova estrutura (DDL novo).  
 Os ajustes devem ser válidos e funcionais, garantindo a continuidade do processo de ingestão de dados sem perda ou corrupção de informações.
 
@@ -16,8 +16,11 @@ Objetivo
 Gerar comandos SQL (ALTER TABLE) que tornem a estrutura atual compatível com o novo layout, de forma incremental e segura.
 
 Entradas
-- CREATE TABLE (atual, já existente no banco): [[DDL_ATUAL]]
-- CREATE TABLE (novo, derivado do novo layout do CSV): [[DDL_NOVO]]
+- CREATE TABLE (atual, já existente no banco): 
+[[DDL_ATUAL]]
+
+- CREATE TABLE (novo, derivado do novo layout do CSV): 
+[[DDL_NOVO]]
 
 Regras e diretrizes obrigatórias
 1. Compare os nomes das colunas, ignorando diferenças de tipos e constraints, mas preserve compatibilidade.
@@ -28,18 +31,25 @@ Regras e diretrizes obrigatórias
 6. Ignore chaves primárias e constraints, a menos que sejam imprescindíveis para manter a integridade referencial.
 7. Todos os comandos devem ser sintaticamente válidos em PostgreSQL.
 8. Se não houver diferença estrutural, retorne uma mensagem clara informando que nenhum ajuste é necessário.
+9. Proibido retornar qualquer código, incluindo Python, SQL, JSON, pseudocódigo ou trechos formatados como código.
+10. Não retorne sua lógica de resolução, só a resolução.
 
-Formato de resposta
-Retorne **apenas o código SQL completo**, formatado corretamente, seguido de um pequeno resumo em JSON.  
-Não adicione explicações fora do formato definido abaixo.
 
-Exemplo de saída esperada
+
+Formato da saída (único formato permitido):
+
 ```sql
 ALTER TABLE public.funcionarios
     ADD COLUMN data_admissao DATE,
     ADD COLUMN status_funcionario TEXT,
     RENAME COLUMN nome TO nome_completo,
     ALTER COLUMN salario TYPE NUMERIC(12,2);
+```
+
+Se não houver ajustes, retornar apenas:
+
+Ajustes:
+(nenhuma)
 
 """
 

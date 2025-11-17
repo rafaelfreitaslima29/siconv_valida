@@ -11,6 +11,25 @@ select
     ROUND(((  (COUNT(*) OVER (PARTITION BY llm_model_name)) / 385.0 ) * 100.0)::numeric, 2) ||'%' AS completou,
     385 - COUNT(*) OVER (PARTITION BY llm_model_name) as falta,
     resultado
+FROM siconv_valida.tb_ajustes_tabela
+order by 1 desc
+;
+
+
+
+select
+	id,
+	llm_model_name,
+	inicio_execucao::timestamp,
+	fim_execucao::timestamp,
+	(fim_execucao::timestamp - inicio_execucao::timestamp) AS tempo,
+	SUM( (fim_execucao::timestamp - inicio_execucao::timestamp) ) over (partition by llm_model_name) as tempo_total_execucao,
+    AVG( (fim_execucao::timestamp - inicio_execucao::timestamp) ) over (PARTITION BY llm_model_name) AS media,
+    385 as total,
+    COUNT(*) OVER (PARTITION BY llm_model_name) AS total_execucoes_llm_model,
+    ROUND(((  (COUNT(*) OVER (PARTITION BY llm_model_name)) / 385.0 ) * 100.0)::numeric, 2) ||'%' AS completou,
+    385 - COUNT(*) OVER (PARTITION BY llm_model_name) as falta,
+    resultado
 FROM siconv_valida.tb_verificar_adicao_coluna
 order by 1 desc
 ;
