@@ -90,6 +90,44 @@ class TbVerificarAltaracaoNomeColunaModel(Base):
 # Tabela de Verificar Adição de Coluna
 # ================================================================================================
 
+class TbVerificarAdicaoColunaModel(Base):
+    '''Model para persistir a Verificação de adição de colunas novas da tabela.'''
+    __tablename__ = "tb_verificar_adicao_coluna"
+    __table_args__ = {'schema': 'siconv_valida'}
+
+    id                      : Mapped[int] = mapped_column(primary_key=True)
+    llm_model_name          : Mapped[str] = mapped_column(nullable=True)
+    create_table_existente  : Mapped[str] = mapped_column(nullable=True)
+    create_table_novo       : Mapped[str] = mapped_column(nullable=True)
+    inicio_execucao         : Mapped[str] = mapped_column(nullable=True)
+    fim_execucao            : Mapped[str] = mapped_column(nullable=True)
+    resultado               : Mapped[str] = mapped_column(nullable=True)
+
+
+    def __repr__(self):
+        return f"""
+        <TbVerificarAdicaoColunaModel(id={self.id}, 
+        llm_model_name={self.llm_model_name}, 
+        create_table_existente={self.create_table_existente}, 
+        create_table_novo={self.create_table_novo}
+        inicio_execucao={self.inicio_execucao}
+        fim_execucao={self.fim_execucao}
+        resultado={self.resultado}
+        )>"""
+
+
+
+    @classmethod
+    def Insert(self, model):
+        """Método de classe para criar um novo registro"""
+        with SessionLocal() as session:
+            session.add(model)
+            session.commit()
+            return model
+
+
+
+
 
 
 # ================================================================================================

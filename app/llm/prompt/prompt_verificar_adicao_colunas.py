@@ -16,8 +16,11 @@ Detectar colunas que não existiam no DDL anterior e que foram adicionadas no no
 Ignore completamente tipos de dados, chaves primárias, constraints, ordem e outras propriedades.
 
 Entradas
-- CREATE TABLE (versão atual): [[DDL_ATUAL]]
-- CREATE TABLE (versão nova): [[DDL_NOVO]]
+- CREATE TABLE (versão atual): 
+[[DDL_ATUAL]]
+
+- CREATE TABLE (versão nova): 
+[[DDL_NOVO]]
 
 Regras de comparação
 1. Compare apenas os nomes das colunas.
@@ -25,6 +28,9 @@ Regras de comparação
 3. Normalize os nomes: remova aspas, acentos, e compare de forma case-insensitive.
 4. Ignore a ordem das colunas.
 5. Retorne apenas as colunas que **existem no novo DDL e não existiam no anterior**.
+6. Proibido retornar qualquer código, incluindo Python, SQL, JSON, pseudocódigo ou trechos formatados como código.
+7. Não retorne sua lógica de resolução, só a resolução.
+
 
 Exemplo de entrada
 -- Versão atual
@@ -44,6 +50,19 @@ CREATE TABLE funcionarios (
     data_admissao DATE,
     status_funcionario TEXT
 );
+
+
+Formato da saída (único formato permitido):
+
+Colunas Adicionadas:
+ NOME_DA_COLUNA1
+ NOME_DA_COLUNA2
+
+
+Se não houver adição de colunas, retornar apenas:
+
+Colunas adicionadas:
+(nenhuma)
 
 """
 
