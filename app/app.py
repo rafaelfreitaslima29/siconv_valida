@@ -48,16 +48,18 @@ from multiprocessing import Process, Queue
 import time
 
 from experimento.exp_verificar_adicao_colunas_llama_3_1_8b_service import ExpVerificarAdicaoColunasLLama_3_1_8b_service
+from experimento.exp_verificar_adicao_colunas_llama_3_2_3b_service import ExpVerificarAdicaoColunasLLama_3_2_3b_service
 
 from experimento.exp_create_table_by_csv_llama_3_2_1b_service import ExpCreateTableByCsvLLama3_2_1bService
 from experimento.exp_create_table_by_csv_llama_3_2_3b_service import ExpCreateTableByCsvLLama3_2_3bService
 from experimento.exp_create_table_by_csv_llama_3_1_8b_service import ExpCreateTableByCsvLLama3_1_8bService
+
 from experimento.exp_verificar_alteracao_nomes_colunas_llama_3_2_1b_service import ExpVerificarAlteracaoNomesColunasLLama_3_2_1b_service
 from experimento.exp_verificar_alteracao_nomes_colunas_llama_3_2_3b_service import ExpVerificarAlteracaoNomesColunasLLama_3_2_3b_service
 from experimento.exp_verificar_alteracao_nomes_colunas_llama_3_1_8b_service import ExpVerificarAlteracaoNomesColunasLLama_3_1_8b_service
+
 from experimento.exp_ajustes_tabela_llama_3_1_8b_service import ExpAjustesTabelaLLama_3_1_8b_service
 from experimento.exp_ajustes_tabela_llama_3_2_3b_service import ExpAjustesTabelaLLama_3_2_3b_service
-
 
 
 # from app_log.AppLog import AppLog
@@ -111,6 +113,14 @@ app.config['UPLOAD_FOLDER']         = UPLOAD_FOLDER
 def index():
     rotas = [
         {
+            "nome": "/run_exp_verificar_adicao_colunas_llama_3_2_3b",
+            "link": "/run_exp_verificar_adicao_colunas_llama_3_2_3b"
+        },
+        {
+            "nome": "/run_exp_verificar_adicao_colunas_llama_3_1_8b", 
+            "link": "/run_exp_verificar_adicao_colunas_llama_3_1_8b"
+        },
+        {
             "nome": "/run_exp_ajustes_tabela_llama_3_2_3b", 
             "link": "/run_exp_ajustes_tabela_llama_3_2_3b"
         },
@@ -118,10 +128,7 @@ def index():
             "nome": "/run_exp_ajustes_tabela_llama_3_1_8b", 
             "link": "/run_exp_ajustes_tabela_llama_3_1_8b"
         },
-        {
-            "nome": "/run_exp_verificar_adicao_colunas_llama_3_1_8b", 
-            "link": "/run_exp_verificar_adicao_colunas_llama_3_1_8b"
-        },
+        
         {
             "nome": "/run_exp_verificar_alteracao_nomes_colunas_llama_todos", 
             "link": "/run_exp_verificar_alteracao_nomes_colunas_llama_todos"
@@ -236,13 +243,13 @@ def run_debug():
 def run_exp_ajustes_tabela_llama_3_2_3b():
     
 
-    # for i in range(385):
-    for i in range(68):
+    for i in range(385):
+    # for i in range(68):
         experimento = ExpAjustesTabelaLLama_3_2_3b_service()
         experimento.run()
         print(f'Execução: {i +1}')
 
-        TimeUtil().pause(40)
+        TimeUtil().pause(10)
     html = '<p>Terminou</p>'
     print(html)
 
@@ -261,8 +268,8 @@ def run_exp_ajustes_tabela_llama_3_2_3b():
 @app.route('/run_exp_ajustes_tabela_llama_3_1_8b', methods=['GET'])
 def run_exp_ajustes_tabela_llama_3_1_8b():
 
-    # for i in range(385):
-    for i in range(375):
+    for i in range(385):
+    # for i in range(10):
         experimento =  ExpAjustesTabelaLLama_3_1_8b_service()
         experimento.run()
         print(f'Execução: {i +1}')
@@ -275,6 +282,31 @@ def run_exp_ajustes_tabela_llama_3_1_8b():
     return Response(html, mimetype="text/html")
 
 
+
+
+
+
+
+# ================================================================================================
+# ROTA Experiemnto Verificar Adição de Colunas LLama 3.2 3b
+# ================================================================================================
+@app.route('/run_exp_verificar_adicao_colunas_llama_3_2_3b', methods=['GET'])
+def run_exp_verificar_verificar_adicao_colunas_llama_3_2_3b():
+
+    for i in range(385):
+    # for i in range(10):
+        experimento = ExpVerificarAdicaoColunasLLama_3_2_3b_service()
+        experimento.run()
+        print(f'Execução: {i +1}')
+
+        TimeUtil().pause(10)
+
+    html = '<p>Terminou</p>'
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
 
 
 
