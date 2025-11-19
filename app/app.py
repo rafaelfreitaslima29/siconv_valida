@@ -47,9 +47,12 @@ from utils.time_util import TimeUtil
 from multiprocessing import Process, Queue
 import time
 
+
+from experimento.exp_verificar_adicao_colunas_gpt_5_1_service import ExpVerificarAdicaoColunasGpt_5_1_service
 from experimento.exp_verificar_adicao_colunas_llama_3_1_8b_service import ExpVerificarAdicaoColunasLLama_3_1_8b_service
 from experimento.exp_verificar_adicao_colunas_llama_3_2_3b_service import ExpVerificarAdicaoColunasLLama_3_2_3b_service
 
+from experimento.exp_create_table_by_csv_gpt_5_1_service import ExpCreateTableByCsvGpt5_1_Service
 from experimento.exp_create_table_by_csv_llama_3_2_1b_service import ExpCreateTableByCsvLLama3_2_1bService
 from experimento.exp_create_table_by_csv_llama_3_2_3b_service import ExpCreateTableByCsvLLama3_2_3bService
 from experimento.exp_create_table_by_csv_llama_3_1_8b_service import ExpCreateTableByCsvLLama3_1_8bService
@@ -59,6 +62,8 @@ from experimento.exp_verificar_alteracao_nomes_colunas_llama_3_2_1b_service impo
 from experimento.exp_verificar_alteracao_nomes_colunas_llama_3_2_3b_service import ExpVerificarAlteracaoNomesColunasLLama_3_2_3b_service
 from experimento.exp_verificar_alteracao_nomes_colunas_llama_3_1_8b_service import ExpVerificarAlteracaoNomesColunasLLama_3_1_8b_service
 
+
+from experimento.exp_ajustes_tabela_gpt_5_1_service import ExpAjustesTabela_gpt_5_1_service
 from experimento.exp_ajustes_tabela_llama_3_1_8b_service import ExpAjustesTabelaLLama_3_1_8b_service
 from experimento.exp_ajustes_tabela_llama_3_2_3b_service import ExpAjustesTabelaLLama_3_2_3b_service
 
@@ -114,8 +119,20 @@ app.config['UPLOAD_FOLDER']         = UPLOAD_FOLDER
 def index():
     rotas = [
         {
+            "nome": "/run_exp_create_table_by_csv_gpt_5_1",
+            "link": "/run_exp_create_table_by_csv_gpt_5_1"
+        },
+        {
+            "nome": "/run_exp_ajustes_tabela_gpt_5_1",
+            "link": "/run_exp_ajustes_tabela_gpt_5_1"
+        },
+        {
             "nome": "/run_exp_verificar_alteracao_nomes_colunas_gpt_5_1",
             "link": "/run_exp_verificar_alteracao_nomes_colunas_gpt_5_1"
+        },
+        {
+            "nome": "/run_exp_verificar_adicao_colunas_gpt_5_1",
+            "link": "/run_exp_verificar_adicao_colunas_gpt_5_1"
         },
         {
             "nome": "/run_exp_verificar_adicao_colunas_llama_3_2_3b",
@@ -196,6 +213,76 @@ def index():
     return render_template('lista_rotas.html', rotas=rotas)
 
 
+# ================================================================================================
+# ROTA Experiemnto Create Table by GPT 5.1
+# ================================================================================================
+@app.route('/run_exp_create_table_by_csv_gpt_5_1', methods=['GET'])
+def run_exp_create_table_by_csv_gpt_5_1():
+
+    # for i in range(385):
+    for i in range(375):
+        experimento = ExpCreateTableByCsvGpt5_1_Service()
+        experimento.run()
+        print(f'Execução: {i +1}')
+
+        TimeUtil().pause(5)
+
+    html = '<p>Terminou</p>'
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
+
+
+
+
+
+# ================================================================================================
+# ROTA Experiemnto Verificar Adição de Colunas GPT 5.1
+# ================================================================================================
+@app.route('/run_exp_verificar_adicao_colunas_gpt_5_1', methods=['GET'])
+def run_exp_verificar_verificar_adicao_colunas_gpt_5_1():
+
+    # for i in range(385):
+    for i in range(375):
+        experimento = ExpVerificarAdicaoColunasGpt_5_1_service()
+        experimento.run()
+        print(f'Execução: {i +1}')
+
+        TimeUtil().pause(10)
+
+    html = '<p>Terminou</p>'
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
+
+
+
+
+
+# ================================================================================================
+# ROTA Experiemnto Ajustes Tabela GTP 5.1
+# ================================================================================================
+@app.route('/run_exp_ajustes_tabela_gpt_5_1', methods=['GET'])
+def run_exp_ajustes_tabela_gpt_5_1():
+    
+
+    for i in range(385):
+    # for i in range(68):
+        experimento = ExpAjustesTabela_gpt_5_1_service()
+        experimento.run()
+        print(f'Execução: {i +1}')
+
+        TimeUtil().pause(10)
+    html = '<p>Terminou</p>'
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
 
 
 
@@ -207,8 +294,7 @@ def index():
 @app.route('/run_exp_verificar_alteracao_nomes_colunas_gpt_5_1', methods=['GET'])
 def run_exp_verificar_alteracao_nomes_colunas_gpt_5_1():
 
-    # for i in range(385):
-    for i in range(185):
+    for i in range(385):
         experimento = ExpVerificarAlteracaoNomesColunasGpt_5_1_service()
         experimento.run()
         print(f'Execução: {i +1}')
