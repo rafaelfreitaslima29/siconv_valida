@@ -68,6 +68,9 @@ from experimento.exp_verificar_adicao_colunas_llama_3_2_1b_service import ExpVer
 from experimento.exp_verificar_alteracao_nomes_colunas_llama_3_2_1b_service import ExpVerificarAlteracaoNomesColunasLLama_3_2_1b_service
 from experimento.exp_ajustes_tabela_llama_3_2_1b_service import ExpAjustesTabelaLLama_3_2_1b_service
 
+from db.repositories.tb_create_table_by_csv_repository import TbCreateTableByCsvRepository
+from experimento.verificacao.verificar_create_table import VerificarCreateTable
+
 
 
 # from app_log.AppLog import AppLog
@@ -120,6 +123,18 @@ app.config['UPLOAD_FOLDER']         = UPLOAD_FOLDER
 @app.route("/")
 def index():
     rotas = [
+        {
+            "nome": "DEBUG DE CÓDIGO", 
+            "link": "/debug"
+        },
+        {
+            "nome": "/run_exp_create_table_select_all",
+            "link": "/run_exp_create_table_select_all"
+        },
+        {
+            "nome": "/run_exp_ajustes_tabela_llama_3_1_1b",
+            "link": "/run_exp_ajustes_tabela_llama_3_1_1b"
+        },
         {
             "nome": "/run_exp_verificar_adicao_colunas_llama_3_2_1b",
             "link": "/run_exp_verificar_adicao_colunas_llama_3_2_1b"
@@ -186,10 +201,6 @@ def index():
             "link": "/run_exp_create_table_by_csv_llama_3_2_1b"
         },
         {
-            "nome": "DEBUG DE CÓDIGO", 
-            "link": "/debug"
-        },
-        {
             "nome": "run_create_csv llama3.2:1b", 
             "link": "/run_create_csv_llama3_2_1b"
         } ,
@@ -220,6 +231,66 @@ def index():
 
 
 
+# ================================================================================================
+# ROTA DEBUG
+# ================================================================================================
+@app.route('/debug', methods=['GET'])
+def run_debug():
+
+    print('########## RETORNO MODEL BY ID')
+    rep = TbCreateTableByCsvRepository()
+    input_model = rep.SelectAll() #  .SelectById(1)
+    
+    for mod in input_model:
+        print(mod)
+        print('########## RETORNO VERIFICAR CREATE TABLE')
+        ver = VerificarCreateTable()
+        ver.verificar_create_table_by_csv(model=mod)
+
+
+    print("Terminou a execução!!")
+
+    return Response('Terminou a execução!!', mimetype="text/html")
+
+
+
+
+
+
+
+# ================================================================================================
+# ROTA Experiemnto Create Table CSV - teste SelectAll
+# ================================================================================================
+@app.route('/run_exp_create_table_select_all', methods=['GET'])
+def run_exp_create_table_select_all():
+    
+    repository = TbCreateTableByCsvRepository()
+    resultado = repository.SelectAll()
+
+    print(resultado)
+    
+    # for i in range(13):
+    
+    
+    
+    #     experimento = ExpAjustesTabelaLLama_3_2_1b_service()
+    #     experimento.run()
+    #     print(f'Execução: {i +1}')
+
+    #     TimeUtil().pause(10)
+    html = '<p>Terminou</p>'
+    print(html)
+
+    print("Terminou a execução!!")
+
+    return Response(html, mimetype="text/html")
+
+
+
+
+
+
+
 
 # ================================================================================================
 # ROTA Experiemnto Ajustes Tabela LLAMA 3.1 1b
@@ -227,8 +298,8 @@ def index():
 @app.route('/run_exp_ajustes_tabela_llama_3_1_1b', methods=['GET'])
 def run_exp_ajustes_tabela_llama_3_1_1b():
     
-    for i in range(385):
-    # for i in range(68):
+    # for i in range(385):
+    for i in range(13):
         experimento = ExpAjustesTabelaLLama_3_2_1b_service()
         experimento.run()
         print(f'Execução: {i +1}')
@@ -369,45 +440,6 @@ def run_exp_verificar_alteracao_nomes_colunas_gpt_5_1():
 
 
 
-
-
-
-# ================================================================================================
-# ROTA DEBUG
-# ================================================================================================
-@app.route('/debug', methods=['GET'])
-def run_debug():
-    # ds = DebugService()
-    # ds.RunFileDownloader()
-   
-    # ds.RunZipManager()
-
-    # ds.RunPromptCreateTableCsv()
-
-    # ds.RunCreateTableByCSV()
-
-    # ds.RunPromptVerificarAlteracaoNomesColunas()
-
-    # ds.RunPromptVerificarAdicaoColunas()
-
-    # ds.RunPromptAjustesTable()
-
-
-    caminho_e_nome_csv="files/descompactados/siconv_convenio.csv"
-    nome_tabela_banco="tb_convenios"
-    llm_model_name="llama3.2:1b"
-
-    cts = CreateTableByCsvService()
-    cts.set_caminho_e_nome_csv(caminho_e_nome_csv=caminho_e_nome_csv)
-    cts.set_nome_tabela_banco(nome_tabela_banco=nome_tabela_banco)
-    cts.set_llm_model_name(llm_model_name=llm_model_name)
-
-    html = cts.run_llm()
-    print(html)
-
-    print("Terminou a execução!!")
-
-    return Response(html, mimetype="text/html")
 
 
 

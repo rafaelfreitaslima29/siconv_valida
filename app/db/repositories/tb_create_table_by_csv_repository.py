@@ -21,3 +21,12 @@ class TbCreateTableByCsvRepository():
 
 
 
+    def SelectAll(self):
+        model = TbCreateTableByCsvModel()
+        return model.SelectAll()
+    
+
+    
+    def SelectById(self, id:int):
+        model = TbCreateTableByCsvModel()
+        return model.SelectById(id=id)

@@ -2,8 +2,89 @@ GPT:
 	* Qualidade do retorno e bem preciso.
 	* alter table e colocando um schema public com o schema 
 
+	
+	
+	
+SELECT
+	id,
+	llm_model_name,
+	resultado
+--	'' AS analise
+--	,
+--	create_table_existente,
+--	create_table_novo,
+--	inicio_execucao,
+--	fim_execucao,
+--	resultado
+FROM
+	siconv_valida.tb_verificar_alteracao_nome_coluna
+WHERE llm_model_name = 'llama3.2:1b'
+ORDER BY 1
+	
 
 
+-- VERIFICAR SE SE CRIOU MAIS COLUNAS OU FALTOU COLUNAS
+WITH base AS (
+	select
+		id,
+		tb_create_table_by_csv_id,
+		llm_model_name,
+		nome_tabela_banco,
+		CASE WHEN colunas_menos LIKE 'set()' THEN 0 ELSE 1 END AS colunas_falta,
+		CASE WHEN colunas_mais LIKE 'set()' THEN 0 ELSE 1 END AS colunas_extras,	
+		CASE WHEN 
+			( 
+				CASE WHEN colunas_menos LIKE 'set()' THEN 0 ELSE 1 END 
+				+
+				CASE WHEN colunas_mais LIKE 'set()' THEN 0 ELSE 1 END
+			) = 0 THEN 1 ELSE 0 END AS resultado,
+		colunas_menos,
+		colunas_mais,
+		create_table
+	from
+		siconv_valida.tb_verificar_create_table_by_csv
+)
+select
+	id,
+	tb_create_table_by_csv_id,
+	llm_model_name,
+	colunas_falta,
+	colunas_extras,
+	resultado,
+	sum(resultado) OVER (PARTITION BY llm_model_name) AS soma,
+	sum(resultado) OVER (PARTITION BY llm_model_name)::numeric / 385.0 AS porcentagem,
+	nome_tabela_banco,
+	colunas_menos,
+	colunas_mais,	
+	create_table
+FROM base;
+	
+	
+	
+	
+select
+	id,
+	llm_model_name,
+	inicio_execucao::timestamp,
+	fim_execucao::timestamp,
+	(fim_execucao::timestamp - inicio_execucao::timestamp) AS execucao,
+	SUM( (fim_execucao::timestamp - inicio_execucao::timestamp) ) over (partition by llm_model_name) as total_execucao,
+	EXTRACT(EPOCH FROM (fim_execucao::timestamp - inicio_execucao::timestamp))::numeric AS duracao_segundos,
+	EXTRACT(EPOCH FROM AVG(fim_execucao::timestamp - inicio_execucao::timestamp) OVER (PARTITION BY llm_model_name)) AS media_segundos,
+    AVG( (fim_execucao::timestamp - inicio_execucao::timestamp) ) over (PARTITION BY llm_model_name) AS media,
+    385 as total,
+    COUNT(*) OVER (PARTITION BY llm_model_name) AS total_execucoes_llm_model,
+    ROUND(((  (COUNT(*) OVER (PARTITION BY llm_model_name)) / 385.0 ) * 100.0)::numeric, 2) ||'%' AS completou,
+    385 - COUNT(*) OVER (PARTITION BY llm_model_name) as falta,
+    resultado
+FROM siconv_valida.tb_ajustes_tabela
+order by 1 desc
+;
+
+
+	
+	
+	
 
 select
 	id,
@@ -86,7 +167,25 @@ select
 	EXTRACT(EPOCH FROM AVG(fim_execucao::timestamp - inicio_execucao::timestamp) OVER (PARTITION BY llm_model_name)) AS media_segundos,
     AVG( (fim_execucao::timestamp - inicio_execucao::timestamp) ) over (PARTITION BY llm_model_name) AS media,
     385 as total,
+    COUNT(*) OVER (PARTselect
+	id,
+	llm_model_name,
+	inicio_execucao::timestamp,
+	fim_execucao::timestamp,
+	(fim_execucao::timestamp - inicio_execucao::timestamp) AS execucao,
+	SUM( (fim_execucao::timestamp - inicio_execucao::timestamp) ) over (partition by llm_model_name) as total_execucao,
+	EXTRACT(EPOCH FROM (fim_execucao::timestamp - inicio_execucao::timestamp))::numeric AS duracao_segundos,
+	EXTRACT(EPOCH FROM AVG(fim_execucao::timestamp - inicio_execucao::timestamp) OVER (PARTITION BY llm_model_name)) AS media_segundos,
+    AVG( (fim_execucao::timestamp - inicio_execucao::timestamp) ) over (PARTITION BY llm_model_name) AS media,
+    385 as total,
     COUNT(*) OVER (PARTITION BY llm_model_name) AS total_execucoes_llm_model,
+    ROUND(((  (COUNT(*) OVER (PARTITION BY llm_model_name)) / 385.0 ) * 100.0)::numeric, 2) ||'%' AS completou,
+    385 - COUNT(*) OVER (PARTITION BY llm_model_name) as falta,
+    resultado
+FROM siconv_valida.tb_verificar_alteracao_nome_coluna
+order by 1 desc
+;
+ITION BY llm_model_name) AS total_execucoes_llm_model,
     ROUND(((  (COUNT(*) OVER (PARTITION BY llm_model_name)) / 385.0 ) * 100.0)::numeric, 2) ||'%' AS completou,
     385 - COUNT(*) OVER (PARTITION BY llm_model_name) as falta,
     resultado
@@ -163,13 +262,14 @@ order by 1 desc
 
 
 
+
 select
 	id,
 	llm_model_name,
 	inicio_execucao::timestamp,
 	fim_execucao::timestamp,
-	(fim_execucao::timestamp - inicio_execucao::timestamp) AS tempo,
-	SUM( (fim_execucao::timestamp - inicio_execucao::timestamp) ) over (partition by llm_model_name) as tempo_total_execucao,
+	(fim_execucao::timestamp - inicio_execucao::timestamp) AS execucao,
+	SUM( (fim_execucao::timestamp - inicio_execucao::timestamp) ) over (partition by llm_model_name) as total_execucao,
     AVG( (fim_execucao::timestamp - inicio_execucao::timestamp) ) over (PARTITION BY llm_model_name) AS media,
     385 as total,
     COUNT(*) OVER (PARTITION BY llm_model_name) AS total_execucoes_llm_model,
@@ -179,6 +279,7 @@ select
 FROM siconv_valida.tb_ajustes_tabela
 order by 1 desc
 ;
+
 
 
 

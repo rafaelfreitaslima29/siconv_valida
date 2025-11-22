@@ -43,6 +43,16 @@ class TbCreateTableByCsvModel(Base):
             session.add(model)
             session.commit()
             return model
+    
+    @classmethod
+    def SelectAll(cls):
+        with SessionLocal() as session:
+            return session.query(cls).all()
+
+    @classmethod
+    def SelectById(cls, id: int):
+        with SessionLocal() as session:
+            return session.query(cls).filter(cls.id == id).first()
 
 
 # ================================================================================================
@@ -129,6 +139,19 @@ class TbVerificarAdicaoColunaModel(Base):
 
 
 
+    @classmethod
+    def get_by_id(cls, db, id: int):
+        """Método de classe para consultar por id"""
+        return db.query(cls).filter(cls.id == id).first()
+
+
+
+    @classmethod
+    def get_all(cls, db):
+        """Método de classe para obter todos os registros"""
+        return db.query(cls).all()
+
+
 
 # ================================================================================================
 # Tabela de comparação do create table
@@ -180,5 +203,40 @@ class TbAjustestabelaModel(Base):
 # # ================================================================================================
 
 
+# ================================================================================================
+# Tabela de Create Table do CSV
+# ================================================================================================
+class TbCreateTableByCsvVerificarModel(Base):
+    '''Model para persistir o a verificação do Create Table criado a partir do CSV.'''
+    __tablename__ = "tb_verificar_create_table_by_csv"
+    __table_args__ = {'schema': 'siconv_valida'}
 
+    id                        : Mapped[int] = mapped_column(primary_key=True)
+    tb_create_table_by_csv_id : Mapped[int] = mapped_column(nullable=True)
+    llm_model_name            : Mapped[str] = mapped_column(nullable=True)
+    nome_tabela_banco         : Mapped[str] = mapped_column(nullable=True)
+    create_table              : Mapped[str] = mapped_column(nullable=True)
+    colunas_menos             : Mapped[str] = mapped_column(nullable=True)
+    colunas_mais              : Mapped[str] = mapped_column(nullable=True)
+
+    def __repr__(self):
+        return f"""
+        <TbCreateTableByCsvModel(id={self.id},
+        tb_create_table_by_csv_id={self.tb_create_table_by_csv_id},
+        llm_model_name={self.llm_model_name},
+        nome_tabela_banco={self.nome_tabela_banco},
+        create_table={self.create_table},
+        colunas_menos={self.colunas_menos},
+        colunas_mais={self.colunas_mais}
+        )>"""
+
+
+    @classmethod
+    def Insert(self, model):
+        """Método de classe para criar um novo registro"""
+        with SessionLocal() as session:
+            session.add(model)
+            session.commit()
+            return model
+    
 
