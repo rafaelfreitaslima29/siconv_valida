@@ -17,7 +17,7 @@ SELECT
 --	fim_execucao,
 --	resultado
 FROM
-	siconv_valida.tb_verificar_alteracao_nome_coluna
+	siconv_valida.tb_ajustes_tabela
 WHERE llm_model_name = 'llama3.2:1b'
 ORDER BY 1
 	
