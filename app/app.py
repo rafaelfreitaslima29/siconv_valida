@@ -31,8 +31,6 @@
 # ================================================================================================
 # PARA O Flesk
 from flask import Flask, render_template, Response, request, url_for, redirect, send_from_directory, jsonify
-import requests
-import json
 from sqlalchemy import text
 from db.databases import engine
 from db.models.models import Base
@@ -43,9 +41,6 @@ from services.verificar_adicao_colunas_service import VerificarAdicaoColunasServ
 from services.comparar_create_tables_service import CompararCreateTableService
 from services.debug_service import DebugService
 from utils.time_util import TimeUtil
-
-from multiprocessing import Process, Queue
-import time
 
 
 from experimento.exp_verificar_adicao_colunas_gpt_5_1_service import ExpVerificarAdicaoColunasGpt_5_1_service
@@ -70,22 +65,6 @@ from experimento.exp_ajustes_tabela_llama_3_2_1b_service import ExpAjustesTabela
 
 from db.repositories.tb_create_table_by_csv_repository import TbCreateTableByCsvRepository
 from experimento.verificacao.verificar_create_table import VerificarCreateTable
-
-
-
-# from app_log.AppLog import AppLog
-# BANCO DE DADOS
-# from sqlalchemy import text
-# from src.db.models.models import TbComparacaoModel
-# from src.db.models.models import Base
-# from src.db.databases import engine
-# MANIPULAÇÃO DE ARQUIVOS
-# from src.utils.file_downloader import FileDownloader
-# from src.utils.zip_manager import ZipManager
-# AVALIAÇÃO
-# from experimento.estatistica.tamanho_amostra import TamanhoAmostra
-# from experimento.db.models.models import Base as experimento_Base
-# from experimento.avaliacao.verificar_metrica import VerificarMetricas
 
 
 # ================================================================================================
@@ -255,9 +234,6 @@ def run_debug():
 
 
 
-
-
-
 # ================================================================================================
 # ROTA Experiemnto Create Table CSV - teste SelectAll
 # ================================================================================================
@@ -286,12 +262,6 @@ def run_exp_create_table_select_all():
     return Response(html, mimetype="text/html")
 
 
-
-
-
-
-
-
 # ================================================================================================
 # ROTA Experiemnto Ajustes Tabela LLAMA 3.1 1b
 # ================================================================================================
@@ -311,9 +281,6 @@ def run_exp_ajustes_tabela_llama_3_1_1b():
     print("Terminou a execução!!")
 
     return Response(html, mimetype="text/html")
-
-
-
 
 
 
@@ -340,8 +307,6 @@ def run_exp_verificar_verificar_adicao_colunas_llama_3_2_1b():
 
 
 
-
-
 # ================================================================================================
 # ROTA Experiemnto Create Table by GPT 5.1
 # ================================================================================================
@@ -364,9 +329,6 @@ def run_exp_create_table_by_csv_gpt_5_1():
     return Response(html, mimetype="text/html")
 
 
-
-
-
 # ================================================================================================
 # ROTA Experiemnto Verificar Adição de Colunas GPT 5.1
 # ================================================================================================
@@ -387,9 +349,6 @@ def run_exp_verificar_verificar_adicao_colunas_gpt_5_1():
     print("Terminou a execução!!")
 
     return Response(html, mimetype="text/html")
-
-
-
 
 
 # ================================================================================================
@@ -439,13 +398,6 @@ def run_exp_verificar_alteracao_nomes_colunas_gpt_5_1():
 
 
 
-
-
-
-
-
-
-
 # ================================================================================================
 # ROTA Experiemnto Ajustes Tabela LLama 3.2 3b
 # ================================================================================================
@@ -469,9 +421,6 @@ def run_exp_ajustes_tabela_llama_3_2_3b():
 
 
 
-
-
-
 # ================================================================================================
 # ROTA Experiemnto Ajustes Tabela LLama 3.1 8b
 # ================================================================================================
@@ -490,10 +439,6 @@ def run_exp_ajustes_tabela_llama_3_1_8b():
     print("Terminou a execução!!")
 
     return Response(html, mimetype="text/html")
-
-
-
-
 
 
 
@@ -520,8 +465,6 @@ def run_exp_verificar_verificar_adicao_colunas_llama_3_2_3b():
 
 
 
-
-
 # ================================================================================================
 # ROTA Experiemnto Verificar Adição de Colunas LLama 3.1 8b
 # ================================================================================================
@@ -540,12 +483,6 @@ def run_exp_verificar_verificar_adicao_colunas_llama_3_1_8b():
     print("Terminou a execução!!")
 
     return Response(html, mimetype="text/html")
-
-
-
-
-
-
 
 
 
@@ -569,9 +506,6 @@ def run_llama3_2_1b():
     print("Terminou a execução!!")
 
     return Response(html, mimetype="text/html")
-
-
-
 
 
 
@@ -615,10 +549,6 @@ def run_verificar_alteracao_nomes_colunas_llama3_2_1b():
     return Response(html, mimetype="text/html")
 
 
-
-
-
-
 # ================================================================================================
 # ROTA LLAMA3.2:1b PROMPT verificar_alteracao_nomes_colunas
 # ================================================================================================
@@ -654,8 +584,6 @@ def run_prompt_verificar_adicao_coluna_llama3_2_1b():
     print("Terminou a execução!!")
 
     return Response("<p>CERTO</p>", mimetype="text/html")
-
-
 
 
 # ================================================================================================
@@ -697,8 +625,6 @@ def run_verificar_adicao_coluna_llama3_2_1b():
     return Response(html, mimetype="text/html")
 
 
-
-
 # ================================================================================================
 # ROTA LLAMA3.2:1b comparar create table
 # ================================================================================================
@@ -736,8 +662,6 @@ def run_comparar_create_table_llama3_2_1b():
     print("Terminou a execução!!")
 
     return Response(html, mimetype="text/html")
-
-
 
 
 
